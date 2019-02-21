@@ -132,8 +132,7 @@ extension ViewController {
                                fileName: "image.jpg",
                                mimeType: "image/jpeg")
     },
-                     to: "http://api.imagga.com/v1/content",
-                     headers: ["Authorization": "Basic YWNjXzk3Njg0MmFmYzM3NDkwMTpiNzY1NDViNDZhNjIzNTljODcyNTJmODRkNjI0NTAwZg=="],
+                     with: ImaggaRouter.content,
                      encodingCompletion: { encodingResult in
                       switch encodingResult {
                       case .success(let upload, _, _):
@@ -162,9 +161,7 @@ extension ViewController {
   }
   
   func downloadTags(contentId: String, completion: @escaping ([String]?) -> Void) {
-    Alamofire.request("http://api.imagga.com/v1/tagging",
-                      parameters: ["content": contentId],
-                      headers: ["Authorization": "Basic YWNjXzk3Njg0MmFmYzM3NDkwMTpiNzY1NDViNDZhNjIzNTljODcyNTJmODRkNjI0NTAwZg=="])
+    Alamofire.request(ImaggaRouter.tags(contentId))
       .responseJSON { (response) in
         guard response.result.isSuccess, let value = response.result.value else {
           print("Error while fetching tags: \(String(describing: response.result.error))")
@@ -180,9 +177,7 @@ extension ViewController {
   
   func downloadColors(contentID: String, completion: @escaping ([PhotoColor]?) -> Void) {
     // 1.
-    Alamofire.request("http://api.imagga.com/v1/colors",
-                      parameters: ["content": contentID],
-                      headers: ["Authorization": "Basic YWNjXzk3Njg0MmFmYzM3NDkwMTpiNzY1NDViNDZhNjIzNTljODcyNTJmODRkNjI0NTAwZg=="])
+    Alamofire.request(ImaggaRouter.colors(contentID))
       .responseJSON { response in
         // 2
         guard response.result.isSuccess,
